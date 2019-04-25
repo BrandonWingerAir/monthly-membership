@@ -1,5 +1,5 @@
 <?php 
-  session_start();
+  include_once 'upload_img.php';
 
   if (!isset($_SESSION['loggedIn'])) {
     header('Location: login.php');
@@ -7,6 +7,13 @@
   }
 
   $plan = $_SESSION['plan'];
+  $id = $_SESSION['userId'];
+
+  $conn = new mysqli("DB_HOST", "DB_USERNAME", "DB_PASSWORD", "DB_NAME");
+
+  $sql = "SELECT img FROM users WHERE id = '$id'";
+
+  $img = $conn->query("SELECT img FROM users WHERE id = '$id'")->fetch_object()->img;
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -27,14 +34,21 @@
   <div class="container">
     <div class="row my-5">
       <div class="col-md-3" align="center">
-        <div class="profile__img">
-          <img src="images/user.png" alt="" onclick="uploadImg()" id="profile__img" onmouseover="showChangeImg()" onmouseleave="hideChangeImg()">
-          <div id="container__img-change">
-            <div class="profile__btn_img-change" onclick="uploadImg()" onmouseover="showChangeImg()" onmouseleave="hideChangeImg()">
-              <i class="fas fa-camera"></i>
+        <form action="dashboard.php" method="post" enctype="multipart/form-data">
+          <div class="profile__img">
+            <img src="images/<?= $img; ?>" alt="" onclick="uploadImg()" id="profile__img" onmouseover="showChangeImg()" onmouseleave="hideChangeImg()">
+            <div id="container__img-change">
+              <div class="profile__btn_img-change" onclick="uploadImg()" onmouseover="showChangeImg()" onmouseleave="hideChangeImg()">
+                <i class="fas fa-camera"></i>
+              </div>
             </div>
           </div>
-        </div>
+          <input type="file" name="profileImg" onchange="previewImg(this)" id="profile__img-upload" class="form-control">
+          <br>
+          <p id="avatar-info"><b>Tap avatar to change</b></p>
+          <div onclick="uploadImg()" class="btn btn-primary mb-3" id="profile__btn_img-upload">Upload <i class="fas fa-upload text-white"></i></div>
+          <button type="submit" name="saveProfile" class="btn btn-success" id="profile__btn_img-save">Save Avatar</button>
+        </form>
         <a href="logout.php" class="btn btn-success" id="logout-mobile">Log Out</a>
         <br><br>
         <ul class="list-group">
@@ -66,5 +80,7 @@
     </div>
   </div>
   <h5 class="text-center">Monthly Membership &copy; 2019</h5>
+
+  <script src="script.js"></script>
 </body>
 </html>
