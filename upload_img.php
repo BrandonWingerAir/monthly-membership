@@ -8,7 +8,7 @@
 
   $id = $_SESSION['userId'];
   
-  $conn = new mysqli("db5000045172.hosting-data.io", "dbu104282", "o3P3Pmqi!", "dbs40083");
+  $conn = new mysqli("HOST_NAME", "DB_USER", "PASSWORD", "DB_NAME");
 
   if (isset($_POST['saveProfile'])) {
     $imgName = time() . '_' . $_FILES['profileImg']['name'];
